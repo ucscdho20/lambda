@@ -18,15 +18,37 @@ let MUL   = \n m -> n (ADD m) ZERO
 -------------------------------------------------------------------------------
 eval suc_one :
   SUC ONE
-  -- (a) fill in your reductions here
+  =d> (\n f x -> f (n f x)) (\f x -> f x)
+  =a> (\n f x -> f (n f x)) (\a b -> a b)
+  =b> (\f x -> f ((\a b -> a b) f x))
+  =b> (\f x -> f ((\b -> f b) x))
+  =b> (\f x -> f (f x))
   =d> TWO
 
 eval add_one_zero :
   ADD ONE ZERO
-  -- (b) fill in your reductions here
+  =d> (\n m -> n SUC m) (\f x -> f x) (\f x -> x)
+  =a> (\n m -> n SUC m) (\a1 b1 -> a1 b1) (\a2 b2 -> b2)
+  =b> (\m -> (\a1 b1 -> a1 b1) SUC m) (\a2 b2 -> b2)
+  =b> ((\a1 b1 -> a1 b1) SUC (\a2 b2 -> b2))
+  =d> ((\a1 b1 -> a1 b1) (\n f x -> f (n f x)) (\a2 b2 -> b2))
+  =b> (\b1 -> (\n f x -> f (n f x)) b1) (\a2 b2 -> b2)
+  =b> (\n f x -> f (n f x)) (\a2 b2 -> b2)
+  =b> (\f x -> f ((\a2 b2 -> b2) f x))
+  =b> (\f x -> f ((\b2 -> b2) x))
+  =b> (\f x -> f x)
   =d> ONE
 
 eval add_one_two :
-  ADD ONE TWO 
-  -- (c) fill in your reductions here
+  ADD ONE TWO
+  =d> (\n m -> n SUC m) (\f x -> f x) (\f x -> f (f x))
+  =a> (\n m -> n SUC m) (\f1 x1 -> f1 x1) (\f2 x2 -> f2 (f2 x2))
+  =b> (\m -> (\f1 x1 -> f1 x1) SUC m) (\f2 x2 -> f2 (f2 x2))
+  =d> (\m -> (\f1 x1 -> f1 x1) (\n f x -> f (n f x)) m) (\f2 x2 -> f2 (f2 x2))
+  =b> (\f1 x1 -> f1 x1) (\n f x -> f (n f x)) (\f2 x2 -> f2 (f2 x2))
+  =b> (\x1 -> (\n f x -> f (n f x)) x1) (\f2 x2 -> f2 (f2 x2))
+  =b> (\x1 -> (\f x -> f (x1 f x))) (\f2 x2 -> f2 (f2 x2))
+  =b> (\f x -> f ((\f2 x2 -> f2 (f2 x2)) f x))
+  =b> (\f x -> f ((\x2 -> f (f x2)) x))
+  =b> (\f x -> f (f (f x)))
   =d> THREE

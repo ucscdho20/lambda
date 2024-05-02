@@ -30,11 +30,11 @@ let SND   = \p     -> p FALSE
 -- do not modify text BEFORE this line
 --------------------------------------------------------------------------------
 
-let SKIP1 = undefined       -- (a)
-let DECR  = undefined       -- (b)
-let SUB   = undefined       -- (c)
-let ISZ   = undefined       -- (d)
-let EQL   = undefined       -- (e)
+let SKIP1 = \f p -> ITE (FST p) (PAIR TRUE (f (SND p))) (PAIR TRUE (SND p))
+let DECR  = \n -> FST (n (\p -> PAIR (SND p) (INCR (SND p))) (PAIR FALSE ZERO))
+let SUB   = \n m -> m DECR n
+let ISZ   = \f -> f (\x -> FALSE) TRUE
+let EQL   = \n m -> AND (ISZ (SUB m n)) (ISZ (SUB n m))
 
 --------------------------------------------------------------------------------
 -- do not modify text AFTER this line
